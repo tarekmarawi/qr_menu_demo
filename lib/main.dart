@@ -1,106 +1,160 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const CoffeeMenuApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class CoffeeMenuApp extends StatelessWidget {
+  const CoffeeMenuApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'QR Menu Demo',
-      home: const MenuPage(),
-      debugShowCheckedModeBanner: false,
+      title: 'Coffee Shop Menu',
+      home: Scaffold(
+        appBar: AppBar(title: const Text("Coffee Shop",style: TextStyle(color: Colors.white),),
+          centerTitle: true,
+          toolbarHeight: 299,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(image: AssetImage('assets/images/shop.jpg'),fit: BoxFit.cover)
+            ),
+          ),
+        ),
+        body: const CoffeeMenuPage(),
+        backgroundColor: Colors.orangeAccent,
+      ),
     );
   }
 }
 
-class MenuPage extends StatelessWidget {
-  const MenuPage({super.key});
+class CoffeeMenuPage extends StatefulWidget {
+  const CoffeeMenuPage({super.key});
 
-  // Sample menu items
-  List<Map<String, dynamic>> get items => [
-    {'name': 'Espresso', 'price': '2.50'},
-    {'name': 'Cappuccino', 'price': '3.00'},
-    {'name': 'Cheesecake', 'price': '4.50'},
+  @override
+  State<CoffeeMenuPage> createState() => _CoffeeMenuPageState();
+}
+
+class _CoffeeMenuPageState extends State<CoffeeMenuPage>
+    with TickerProviderStateMixin {
+  int? expandedIndex;
+
+  final List<String> categories = ["Cold Drinks", "Shisha", "Hot Drinks"];
+
+  // Colors for the 9 items grid (different per category)
+  final List<Color> categoryColors = [
+    Colors.yellow,
+    Colors.green,
+    Colors.blue
+  ];
+
+  // Images for the buttons
+  final List<String> buttonImages = [
+    'assets/images/cold.jpg',
+    'assets/images/shisha.webp',
+    'assets/images/hot.webp',
   ];
 
   @override
   Widget build(BuildContext context) {
-    // The URL to encode in QR. For local testing it will be something like "http://localhost:xxxx/"
-    final String urlToShare = kIsWeb ? Uri.base.toString() : 'https://example.com/qr-menu';
+    double screenWidth = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cafe Menu (Demo)'),
-        actions: [
-          IconButton(
-            tooltip: 'Show QR for this page',
-            icon: const Icon(Icons.qr_code),
-            onPressed: () => _showQrDialog(context, urlToShare),
-          )
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          children: [
-            const Text('Menu', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, i) {
-                  final item = items[i];
-                  return Card(
-                    child: ListTile(
-                      title: Text(item['name']),
-                      subtitle: Text('€ ${item['price']}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.qr_code_rounded),
-                        onPressed: () {
-                          // For each menu item we could encode a link + item id; here we just show page URL
-                          _showQrDialog(context, urlToShare + '#item=${Uri.encodeComponent(item['name'])}');
-                        },
-                      ),
-                    ),
-                  );
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // Buttons row with images
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(categories.length, (index) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    if (expandedIndex == index) {
+                      expandedIndex = null;
+                    } else {
+                      expandedIndex = index;
+                    }
+                  });
                 },
-              ),
-            ),
-          ],
-        ),
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 200,
+                  width: screenWidth * 0.28,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.redAccent, // fallback if image missing
+                    image: DecorationImage(
+                      image: AssetImage(buttonImages[index]),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    color: Colors.black54,
+                    padding: const EdgeInsets.all(4),
+                    child: Text(
+                      categories[index],
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+
+          // Grid of items below the row
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 500),
+            transitionBuilder: (child, animation) {
+              return SizeTransition(
+                sizeFactor: animation,
+                axis: Axis.vertical,
+                child: child,
+              );
+            },
+            child: expandedIndex != null
+                ? _buildGrid(expandedIndex!)
+                : const SizedBox.shrink(),
+          ),
+        ],
       ),
     );
   }
 
-  void _showQrDialog(BuildContext context, String data) {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text('Scan this QR'),
-        content: SizedBox(
-          width: 250,
-          height: 300,
-          child: Column(
-            children: [
-              QrImageView(
-                data: data,
-                version: QrVersions.auto,
-                size: 200,
-                gapless: false,
-              ),
-              const SizedBox(height: 8),
-              SelectableText(data, maxLines: 2),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))
-        ],
+  Widget _buildGrid(int index) {
+    return Container(
+      key: ValueKey(index),
+      padding: const EdgeInsets.all(10),
+      child: GridView.count(
+        crossAxisCount: 5,
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        childAspectRatio: 1,
+        children: List.generate(9, (i) {
+          return Container(
+            color: categoryColors[index].withOpacity(0.8),
+            child: Column(
+              children: [
+                Center(
+                  child: Image.asset(
+                    buttonImages[index], // same image repeated for now
+                    fit: BoxFit.cover,
+                    width: 90,
+                    height: 60,
+                  ),
+                ),
+                Text("data")
+              ],
+            ),
+          );
+        }),
       ),
     );
   }
