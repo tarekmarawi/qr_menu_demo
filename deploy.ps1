@@ -1,32 +1,43 @@
-Write-Host "🚀 Deploying Flutter Web..."
+# ===============================
+# Flutter Web GitHub Pages Deploy
+# ===============================
 
-# 1. Build
-flutter build web --release --web-renderer html --base-href "/qr_menu_demo/"
+# 1️⃣ Build Flutter web
+Write-Host "Building Flutter web..."
+flutter build web --release --web-renderer html --base-href /qr_menu_demo/
 
-# 2. Patch bootstrap
-$bootstrap = "build/web/flutter_bootstrap.js"
-(Get-Content $bootstrap) `
-    -replace 'serviceWorker[\s\S]*?},', "" `
-    -replace '_flutter.loader.load\(\s*\);', '_flutter.loader.load();' |
-    Set-Content $bootstrap
-
-# 3. Delete service worker files
-$files = @(
-    "build/web/flutter_service_worker.js",
-    "build/web/version.json",
-    "build/web/.last_build_id"
-)
-foreach ($f in $files) {
-    if (Test-Path $f) { Remove-Item $f -Force }
+# 2️⃣ Patch bootstrap.js to remove service worker
+$bootstrapFile = "build/web/bootstrap.js"
+if (Test-Path $bootstrapFile) {
+    Write-Host "Patching bootstrap.js..."
+    (Get-Content $bootstrapFile) |
+        ForEach-Object { $_ -replace '_flutter.loader.load\(\{[^}]*\}\);', '_flutter.loader.load();' } |
+        Set-Content $bootstrapFile
+} else {
+    Write-Host "Warning: bootstrap.js not found!"
 }
 
-# 4. Replace docs
-if (Test-Path "docs") { Remove-Item docs -Recurse -Force }
-Copy-Item build/web docs -Recurse -Force
+# 3️⃣ Delete flutter_service_worker.js
+$swFile = "build/web/flutter_service_worker.js"
+if (Test-Path $swFile) {
+    Write-Host "Deleting flutter_service_worker.js..."
+    Remove-Item -Force $swFile
+}
 
-# 5. Git commit
+# 4️⃣ Delete old docs folder
+if (Test-Path "docs") {
+    Write-Host "Deleting old docs folder..."
+    Remove-Item -Recurse -Force docs
+}
+
+# 5️⃣ Copy new build to docs
+Write-Host "Copying new build to docs..."
+Copy-Item -Recurse -Force build/web docs
+
+# 6️⃣ Git commit and push
+Write-Host "Committing and pushing to GitHub..."
 git add .
-git commit -m "Deploy"
-git push
+git commit -m "Deploy new Flutter web build"
+git push origin main
 
-Write-Host "✅ Done!"
+Write-Host "✅ Deployment complete!"
