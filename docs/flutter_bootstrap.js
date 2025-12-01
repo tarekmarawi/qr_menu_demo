@@ -9,6 +9,5 @@ if (!window._flutter) {
 _flutter.buildConfig = {"engineRevision":"36335019a8eab588c3c2ea783c618d90505be233","builds":[{"compileTarget":"dart2js","renderer":"html","mainJsPath":"main.dart.js"}]};
 
 
-_flutter.loader.load({
-  serviceWorkerSettings: null
-});
+_flutter.loader.load();
+
