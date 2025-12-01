@@ -136,7 +136,7 @@ class MenuPage extends GetView<CafeMenuController> {
                 return Container(
                   margin: margin,
                   height: screenheight*0.2,
-                  width: screenWidth*0.25, // Fixed width for horizontal scrolling buttons
+                  width: screenWidth*0.15, // Fixed width for horizontal scrolling buttons
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     // Highlight the border if the category is expanded
