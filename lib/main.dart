@@ -1,160 +1,66 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'controllers/menu_controller.dart';
+import 'views/menu_page.dart';
+import 'utils/app_colors.dart';
+
+/// The initial binding for the application.
+/// This ensures the MenuController is instantiated and available
+/// before the MenuPage is built.
+class InitialBinding implements Bindings {
+  @override
+  void dependencies() {
+    // Lazy put the MenuController, meaning it's created only when first used.
+    // This is the GetX way of making the controller available globally.
+    Get.lazyPut<CafeMenuController>(() => CafeMenuController());
+  }
+}
 
 void main() {
+  // Use GetMaterialApp instead of MaterialApp for GetX features.
   runApp(const CoffeeMenuApp());
 }
 
+/// The root widget of the application, now using GetMaterialApp.
 class CoffeeMenuApp extends StatelessWidget {
   const CoffeeMenuApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Coffee Shop Menu',
-      home: Scaffold(
-        appBar: AppBar(title: const Text("Coffee Shop",style: TextStyle(color: Colors.white),),
-          centerTitle: true,
-          toolbarHeight: 299,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(image: AssetImage('assets/images/shop.jpg'),fit: BoxFit.cover)
-            ),
+    return GetMaterialApp(
+      title: 'The Cozy Corner Cafe Menu',
+      // Define the initial route and binding.
+      initialRoute: '/',
+      initialBinding: InitialBinding(),
+      getPages: [
+        // Define the main page route
+        GetPage(
+          name: '/',
+          page: () => const MenuPage(),
+          binding: InitialBinding(),
+        ),
+      ],
+      // Define a custom theme using the cafe colors.
+      theme: ThemeData(
+        primaryColor: AppColors.primaryDark,
+        scaffoldBackgroundColor: AppColors.background,
+        appBarTheme: const AppBarTheme(
+          color: AppColors.primaryDark,
+          iconTheme: IconThemeData(color: AppColors.textLight),
+          titleTextStyle: TextStyle(
+            color: AppColors.textLight,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: const CoffeeMenuPage(),
-        backgroundColor: Colors.orangeAccent,
-      ),
-    );
-  }
-}
-
-class CoffeeMenuPage extends StatefulWidget {
-  const CoffeeMenuPage({super.key});
-
-  @override
-  State<CoffeeMenuPage> createState() => _CoffeeMenuPageState();
-}
-
-class _CoffeeMenuPageState extends State<CoffeeMenuPage>
-    with TickerProviderStateMixin {
-  int? expandedIndex;
-
-  final List<String> categories = ["Cold Drinks", "Shisha", "Hot Drinks"];
-
-  // Colors for the 9 items grid (different per category)
-  final List<Color> categoryColors = [
-    Colors.yellow,
-    Colors.green,
-    Colors.blue
-  ];
-
-  // Images for the buttons
-  final List<String> buttonImages = [
-    'assets/images/cold.jpg',
-    'assets/images/shisha.webp',
-    'assets/images/hot.webp',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Buttons row with images
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(categories.length, (index) {
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (expandedIndex == index) {
-                      expandedIndex = null;
-                    } else {
-                      expandedIndex = index;
-                    }
-                  });
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  height: 200,
-                  width: screenWidth * 0.28,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.redAccent, // fallback if image missing
-                    image: DecorationImage(
-                      image: AssetImage(buttonImages[index]),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: Colors.black54,
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      categories[index],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-
-          // Grid of items below the row
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            transitionBuilder: (child, animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                axis: Axis.vertical,
-                child: child,
-              );
-            },
-            child: expandedIndex != null
-                ? _buildGrid(expandedIndex!)
-                : const SizedBox.shrink(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGrid(int index) {
-    return Container(
-      key: ValueKey(index),
-      padding: const EdgeInsets.all(10),
-      child: GridView.count(
-        crossAxisCount: 5,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        childAspectRatio: 1,
-        children: List.generate(9, (i) {
-          return Container(
-            color: categoryColors[index].withOpacity(0.8),
-            child: Column(
-              children: [
-                Center(
-                  child: Image.asset(
-                    buttonImages[index], // same image repeated for now
-                    fit: BoxFit.cover,
-                    width: 90,
-                    height: 60,
-                  ),
-                ),
-                Text("data")
-              ],
-            ),
-          );
-        }),
+        // Set the default text color for the app
+        textTheme: Theme.of(context).textTheme.apply(
+          bodyColor: AppColors.textDark,
+          displayColor: AppColors.textDark,
+        ),
+        useMaterial3: true,
       ),
     );
   }
