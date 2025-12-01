@@ -30,8 +30,9 @@ class CoffeeMenuApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'The Cozy Corner Cafe Menu',
+      title: 'Vivo Cafe',
       // Define the initial route and binding.
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       initialBinding: InitialBinding(),
       getPages: [

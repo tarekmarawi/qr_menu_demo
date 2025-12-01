@@ -29,8 +29,8 @@ class MenuPage extends GetView<CafeMenuController> {
               // New AppBar for Title and QR Code Button
               AppBar(
                 title: const Text(
-                  "The Cozy Corner Cafe",
-                  style: TextStyle(color: AppColors.highlight2),
+                  "Vivo Cafe",
+                  style: TextStyle(color: AppColors.primaryDark),
                 ),
                 centerTitle: true,
                 backgroundColor: AppColors.highlight3,
@@ -136,7 +136,7 @@ class MenuPage extends GetView<CafeMenuController> {
                 return Container(
                   margin: margin,
                   height: screenheight*0.2,
-                  width: screenWidth*0.15, // Fixed width for horizontal scrolling buttons
+                  width: screenWidth*0.25, // Fixed width for horizontal scrolling buttons
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     // Highlight the border if the category is expanded
@@ -232,6 +232,7 @@ class MenuPage extends GetView<CafeMenuController> {
     // Get the list of items for the current category reactively.
     final items = controller.currentItems;
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
 
     // Determine crossAxisCount based on screen width for responsiveness
     int crossAxisCount;
@@ -271,25 +272,28 @@ class MenuPage extends GetView<CafeMenuController> {
               ],
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Item Image
-                Image.asset(
-                  item.imagePath,
-                  fit: BoxFit.cover,
-                  width: 90,
-                  height: 60,
+                ClipRRect(borderRadius: BorderRadius.circular(15),
+                  child: Image.asset(
+                    item.imagePath,
+                    fit: BoxFit.cover,
+                    width: screenWidth*0.35,
+                    height: screenheight*0.22,
+                  ),
                 ),
-                const SizedBox(height: 8),
+
                 // Item Name
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Text(
                     item.name,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColors.textDark,
+                      fontSize: screenheight*0.04
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -300,7 +304,7 @@ class MenuPage extends GetView<CafeMenuController> {
                 Text(
                   item.details,
                   style: TextStyle(
-                    fontSize: 10,
+                    fontSize: screenheight*0.02,
                     color: AppColors.textDark.withOpacity(0.7),
                   ),
                   maxLines: 1,
