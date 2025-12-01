@@ -17,7 +17,7 @@ class CafeMenuController extends GetxController {
   /// This is separate from the item data to allow for distinct category images.
   final Map<String, String> categoryImages = {
     "Cold Drinks": 'assets/images/cold.jpg', // Placeholder, use your actual image path
-    "Shisha": 'assets/images/cold.webp', // Placeholder, use your actual image path
+    "Shisha": 'assets/images/cold.jpg', // Placeholder, use your actual image path
     "Hot Drinks": 'assets/images/hot.webp', // Placeholder, use your actual image path
   };
 
@@ -25,38 +25,38 @@ class CafeMenuController extends GetxController {
   /// The key is the category name (String), and the value is a list of MenuItems.
   final Map<String, List<MenuItem>> menuData = {
     "Cold Drinks": [
-      MenuItem(name: "Soda", imagePath: 'assets/images/soda.jpg', details: "Classic carbonated drink."),
-      MenuItem(name: "Pepsi", imagePath: 'assets/images/pepsi.jpg', details: "The original cola."),
-      MenuItem(name: "Cola", imagePath: 'assets/images/cola.jpg', details: "Generic cola drink."),
-      MenuItem(name: "Iced Tea", imagePath: 'assets/images/iced_tea.jpg', details: "Refreshing brewed tea over ice."),
-      MenuItem(name: "Lemonade", imagePath: 'assets/images/lemonade.jpg', details: "Freshly squeezed lemon juice."),
-      MenuItem(name: "Milkshake", imagePath: 'assets/images/milkshake.jpg', details: "Thick and creamy."),
-      MenuItem(name: "Juice", imagePath: 'assets/images/juice.jpg', details: "Selection of fresh juices."),
-      MenuItem(name: "Water", imagePath: 'assets/images/water.jpg', details: "Still or sparkling."),
-      MenuItem(name: "Energy Drink", imagePath: 'assets/images/energy_drink.jpg', details: "For a quick boost."),
+      MenuItem(name: "Soda", imagePath: 'assets/images/cold.jpg', details: "Classic carbonated drink."),
+      MenuItem(name: "Pepsi", imagePath: 'assets/images/cold.jpg', details: "The original cola."),
+      MenuItem(name: "Cola", imagePath: 'assets/images/cold.jpg', details: "Generic cola drink."),
+      MenuItem(name: "Iced Tea", imagePath: 'assets/images/cold.jpg', details: "Refreshing brewed tea over ice."),
+      MenuItem(name: "Lemonade", imagePath: 'assets/images/cold.jpg', details: "Freshly squeezed lemon juice."),
+      MenuItem(name: "Milkshake", imagePath: 'assets/images/cold.jpg', details: "Thick and creamy."),
+      MenuItem(name: "Juice", imagePath: 'assets/images/cold.jpg', details: "Selection of fresh juices."),
+      MenuItem(name: "Water", imagePath: 'assets/images/cold.jpg', details: "Still or sparkling."),
+      MenuItem(name: "Energy Drink", imagePath: 'assets/images/cold.jpg', details: "For a quick boost."),
     ],
     "Shisha": [
-      MenuItem(name: "Double Apple", imagePath: 'assets/images/double_apple.webp', details: "Classic sweet and tangy flavor."),
-      MenuItem(name: "Mint", imagePath: 'assets/images/mint.webp', details: "Cool and refreshing."),
-      MenuItem(name: "Grape", imagePath: 'assets/images/grape.webp', details: "Sweet grape flavor."),
-      MenuItem(name: "Watermelon", imagePath: 'assets/images/watermelon.webp', details: "Juicy and light."),
-      MenuItem(name: "Blue Mist", imagePath: 'assets/images/blue_mist.webp', details: "Berry and mint mix."),
-      MenuItem(name: "Gum", imagePath: 'assets/images/gum.webp', details: "Sweet bubblegum flavor."),
-      MenuItem(name: "Lemon Mint", imagePath: 'assets/images/lemon_mint.webp', details: "Zesty lemon with cool mint."),
-      MenuItem(name: "Orange", imagePath: 'assets/images/orange.webp', details: "Citrusy and bright."),
-      MenuItem(name: "Peach", imagePath: 'assets/images/peach.webp', details: "Sweet and fruity."),
+      MenuItem(name: "Double Apple", imagePath: 'assets/images/cold.jpg', details: "Classic sweet and tangy flavor."),
+      // MenuItem(name: "Mint", imagePath: 'assets/images/mint.webp', details: "Cool and refreshing."),
+      // MenuItem(name: "Grape", imagePath: 'assets/images/grape.webp', details: "Sweet grape flavor."),
+      // MenuItem(name: "Watermelon", imagePath: 'assets/images/watermelon.webp', details: "Juicy and light."),
+      // MenuItem(name: "Blue Mist", imagePath: 'assets/images/blue_mist.webp', details: "Berry and mint mix."),
+      // MenuItem(name: "Gum", imagePath: 'assets/images/gum.webp', details: "Sweet bubblegum flavor."),
+      // MenuItem(name: "Lemon Mint", imagePath: 'assets/images/lemon_mint.webp', details: "Zesty lemon with cool mint."),
+      // MenuItem(name: "Orange", imagePath: 'assets/images/orange.webp', details: "Citrusy and bright."),
+      // MenuItem(name: "Peach", imagePath: 'assets/images/peach.webp', details: "Sweet and fruity."),
     ],
 
     "Hot Drinks": [
-      MenuItem(name: "Espresso", imagePath: 'assets/images/espresso.webp', details: "A strong shot of coffee."),
-      MenuItem(name: "Cappuccino", imagePath: 'assets/images/cappuccino.webp', details: "Espresso with steamed milk and foam."),
-      MenuItem(name: "Latte", imagePath: 'assets/images/latte.webp', details: "Espresso with steamed milk."),
-      MenuItem(name: "Americano", imagePath: 'assets/images/americano.webp', details: "Espresso with hot water."),
-      MenuItem(name: "Hot Chocolate", imagePath: 'assets/images/hot_chocolate.webp', details: "Rich and creamy."),
-      MenuItem(name: "Green Tea", imagePath: 'assets/images/green_tea.webp', details: "Healthy and soothing."),
-      MenuItem(name: "Black Tea", imagePath: 'assets/images/black_tea.webp', details: "Traditional English tea."),
-      MenuItem(name: "Mocha", imagePath: 'assets/images/mocha.webp', details: "Chocolate and coffee."),
-      MenuItem(name: "Macchiato", imagePath: 'assets/images/macchiato.webp', details: "Espresso with a dash of milk."),
+      MenuItem(name: "Espresso", imagePath: 'assets/images/cold.jpg', details: "A strong shot of coffee."),
+      // MenuItem(name: "Cappuccino", imagePath: 'assets/images/cappuccino.webp', details: "Espresso with steamed milk and foam."),
+      // MenuItem(name: "Latte", imagePath: 'assets/images/latte.webp', details: "Espresso with steamed milk."),
+      // MenuItem(name: "Americano", imagePath: 'assets/images/americano.webp', details: "Espresso with hot water."),
+      // MenuItem(name: "Hot Chocolate", imagePath: 'assets/images/hot_chocolate.webp', details: "Rich and creamy."),
+      // MenuItem(name: "Green Tea", imagePath: 'assets/images/green_tea.webp', details: "Healthy and soothing."),
+      // MenuItem(name: "Black Tea", imagePath: 'assets/images/black_tea.webp', details: "Traditional English tea."),
+      // MenuItem(name: "Mocha", imagePath: 'assets/images/mocha.webp', details: "Chocolate and coffee."),
+      // MenuItem(name: "Macchiato", imagePath: 'assets/images/macchiato.webp', details: "Espresso with a dash of milk."),
     ],
   };
 
