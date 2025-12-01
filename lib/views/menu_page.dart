@@ -30,10 +30,10 @@ class MenuPage extends GetView<CafeMenuController> {
               AppBar(
                 title: const Text(
                   "The Cozy Corner Cafe",
-                  style: TextStyle(color: AppColors.textLight),
+                  style: TextStyle(color: AppColors.highlight2),
                 ),
                 centerTitle: true,
-                backgroundColor: AppColors.primaryDark,
+                backgroundColor: AppColors.highlight3,
                 actions: [
                   // QR Code Button
                   IconButton(
