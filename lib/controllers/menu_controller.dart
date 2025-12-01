@@ -17,7 +17,7 @@ class CafeMenuController extends GetxController {
   /// This is separate from the item data to allow for distinct category images.
   final Map<String, String> categoryImages = {
     "Cold Drinks": 'assets/images/cold.jpg', // Placeholder, use your actual image path
-    "Shisha": 'assets/images/shisha.webp', // Placeholder, use your actual image path
+    "Shisha": 'assets/images/cold.webp', // Placeholder, use your actual image path
     "Hot Drinks": 'assets/images/hot.webp', // Placeholder, use your actual image path
   };
 
@@ -46,17 +46,7 @@ class CafeMenuController extends GetxController {
       MenuItem(name: "Orange", imagePath: 'assets/images/orange.webp', details: "Citrusy and bright."),
       MenuItem(name: "Peach", imagePath: 'assets/images/peach.webp', details: "Sweet and fruity."),
     ],
-    "Shisha1": [
-      MenuItem(name: "Double Apple", imagePath: 'assets/images/double_apple.webp', details: "Classic sweet and tangy flavor."),
-      MenuItem(name: "Mint", imagePath: 'assets/images/mint.webp', details: "Cool and refreshing."),
-      MenuItem(name: "Grape", imagePath: 'assets/images/grape.webp', details: "Sweet grape flavor."),
-      MenuItem(name: "Watermelon", imagePath: 'assets/images/watermelon.webp', details: "Juicy and light."),
-      MenuItem(name: "Blue Mist", imagePath: 'assets/images/blue_mist.webp', details: "Berry and mint mix."),
-      MenuItem(name: "Gum", imagePath: 'assets/images/gum.webp', details: "Sweet bubblegum flavor."),
-      MenuItem(name: "Lemon Mint", imagePath: 'assets/images/lemon_mint.webp', details: "Zesty lemon with cool mint."),
-      MenuItem(name: "Orange", imagePath: 'assets/images/orange.webp', details: "Citrusy and bright."),
-      MenuItem(name: "Peach", imagePath: 'assets/images/peach.webp', details: "Sweet and fruity."),
-    ],
+
     "Hot Drinks": [
       MenuItem(name: "Espresso", imagePath: 'assets/images/espresso.webp', details: "A strong shot of coffee."),
       MenuItem(name: "Cappuccino", imagePath: 'assets/images/cappuccino.webp', details: "Espresso with steamed milk and foam."),
