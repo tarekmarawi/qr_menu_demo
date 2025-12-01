@@ -1,29 +1,32 @@
-Write-Host "Building Flutter web..."
-flutter build web --release --web-renderer html --base-href /qr_menu_demo/
+Write-Host "🚀 Deploying Flutter Web..."
 
-Write-Host "Fixing bootstrap.js..."
-$path1 = "build/web/bootstrap.js"
-if (Test-Path $path1) {
-    $t = Get-Content $path1 -Raw
-    $t = $t -replace "_flutter.loader.load(.*);", "_flutter.loader.load();"
-    Set-Content $path1 $t
+# 1. Build
+flutter build web --release --web-renderer html --base-href "/qr_menu_demo/"
+
+# 2. Patch bootstrap
+$bootstrap = "build/web/flutter_bootstrap.js"
+(Get-Content $bootstrap) `
+    -replace 'serviceWorker[\s\S]*?},', "" `
+    -replace '_flutter.loader.load\(\s*\);', '_flutter.loader.load();' |
+    Set-Content $bootstrap
+
+# 3. Delete service worker files
+$files = @(
+    "build/web/flutter_service_worker.js",
+    "build/web/version.json",
+    "build/web/.last_build_id"
+)
+foreach ($f in $files) {
+    if (Test-Path $f) { Remove-Item $f -Force }
 }
 
-Write-Host "Deleting flutter_service_worker..."
-$path2 = "build/web/flutter_service_worker.js"
-if (Test-Path $path2) { Remove-Item -Force $path2 }
+# 4. Replace docs
+if (Test-Path "docs") { Remove-Item docs -Recurse -Force }
+Copy-Item build/web docs -Recurse -Force
 
-Write-Host "Removing old docs..."
-if (Test-Path "docs") { Remove-Item -Recurse -Force docs }
-
-Write-Host "Copying new build..."
-Copy-Item -Recurse -Force build/web docs
-
-Write-Host "Git push..."
+# 5. Git commit
 git add .
-git commit -m Deploy
+git commit -m "Deploy"
 git push
 
-$cache = Get-Random
-Write-Host "DONE. OPEN:"
-Write-Host ("https://tarekmarawi.github.io/qr_menu_demo/?v=" + $cache)
+Write-Host "✅ Done!"
