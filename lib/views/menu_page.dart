@@ -44,7 +44,7 @@ class MenuPage extends GetView<CafeMenuController> {
               ),
               // Flexible Space (Image) - Now a separate widget
               Container(
-                height: screenheight*0.23,
+                height: screenheight*0.13,
                 width: screenWidth,// Reduced height to accommodate the new AppBar
                 decoration: const BoxDecoration(
                   image: DecorationImage(
