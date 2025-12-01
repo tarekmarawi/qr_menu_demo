@@ -13,13 +13,14 @@ class MenuPage extends GetView<CafeMenuController> {
   Widget build(BuildContext context) {
     // Get the screen width for responsive design, as in the original code.
     final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenheight = MediaQuery.of(context).size.height;
     const double infoContainerHeight = 90; // Define the height of the info container
 
     // The Scaffold will now contain a Stack to layer the scrollable content
     // and the fixed information container.
     return Scaffold(
       // Use AppColors for a cafe theme
-      backgroundColor: AppColors.highlight2,
+      backgroundColor: AppColors.background,
       body: Stack(
         children: [
           // 1. Scrollable Content (AppBar, Image, Categories, Items)
@@ -43,7 +44,8 @@ class MenuPage extends GetView<CafeMenuController> {
               ),
               // Flexible Space (Image) - Now a separate widget
               Container(
-                height: 250, // Reduced height to accommodate the new AppBar
+                height: screenheight*0.23,
+                width: screenWidth,// Reduced height to accommodate the new AppBar
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                       image: AssetImage('assets/images/shop.jpg'), fit: BoxFit.cover),
@@ -52,9 +54,8 @@ class MenuPage extends GetView<CafeMenuController> {
               // The rest of the content is wrapped in Expanded and SingleChildScrollView
               // The category buttons are now outside the SingleChildScrollView to keep them fixed.
               // Category Buttons Row (now a horizontal scrollable, centered Row)
-              SizedBox(height: 20,),
               _buildCategoryButtons(screenWidth),
-              SizedBox(height: 20,),
+
               Expanded(
                 child: SingleChildScrollView(
                   // Add padding at the bottom equal to the height of the info container
@@ -64,25 +65,23 @@ class MenuPage extends GetView<CafeMenuController> {
                     children: [
                       // Item Grid (Reactive with Obx)
                       // Obx listens to changes in controller.expandedIndex
-                      Container(width: 1800,
-                        child: Obx(
-                              () => AnimatedSwitcher(
-                            duration: const Duration(milliseconds: 500),
-                            transitionBuilder: (child, animation) {
-                              // Preserving the original SizeTransition animation
-                              return SizeTransition(
-                                sizeFactor: animation,
-                                axis: Axis.vertical,
-                                child: child,
-                              );
-                            },
-                            // Use a unique key for the grid to ensure AnimatedSwitcher works correctly
-                            key: ValueKey(controller.expandedIndex.value),
-                            // The key changes when the expandedIndex changes, triggering the animation
-                            child: controller.expandedIndex.value != null
-                                ? _buildGrid(context, controller.expandedIndex.value!)
-                                : const SizedBox.shrink(key: ValueKey('empty')),
-                          ),
+                      Obx(
+                            () => AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 500),
+                          transitionBuilder: (child, animation) {
+                            // Preserving the original SizeTransition animation
+                            return SizeTransition(
+                              sizeFactor: animation,
+                              axis: Axis.vertical,
+                              child: child,
+                            );
+                          },
+                          // The key changes when the expandedIndex changes, triggering the animation
+                          child: controller.expandedIndex.value != null
+                              ? _buildGrid(context, controller.expandedIndex.value!)
+                              : const SizedBox.shrink(key: ValueKey('empty')),
+                          // Use a unique key for the grid to ensure AnimatedSwitcher works correctly
+                          key: ValueKey(controller.expandedIndex.value),
                         ),
                       ),
                     ],
@@ -97,7 +96,7 @@ class MenuPage extends GetView<CafeMenuController> {
             bottom: 0,
             left: 0,
             right: 0,
-            child: _buildInfoContainer(infoContainerHeight),
+            child: _buildInfoContainer(context,infoContainerHeight),
           ),
         ],
       ),
@@ -121,8 +120,8 @@ class MenuPage extends GetView<CafeMenuController> {
 
             // Get the category name
             final categoryName = controller.categories[index];
-            // Use the image path from the first item in the category as the button image
-            final imagePath = controller.menuData[categoryName]!.first.imagePath;
+            // Use the dedicated image path from the categoryImages map
+            final imagePath = controller.categoryImages[categoryName]!;
 
             return GestureDetector(
               // Call the controller's method to handle the tap and update the state.
@@ -131,11 +130,11 @@ class MenuPage extends GetView<CafeMenuController> {
                 // Obx is used here to reactively change the button's appearance
                 // when it is the currently expanded one.
                 final isExpanded = controller.expandedIndex.value == index;
-//categories width height
+
                 return Container(
                   margin: margin,
-                  height: 600,
-                  width: 650, // Fixed width for horizontal scrolling buttons
+                  height: 200,
+                  width: 250, // Fixed width for horizontal scrolling buttons
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     // Highlight the border if the category is expanded
@@ -154,7 +153,7 @@ class MenuPage extends GetView<CafeMenuController> {
                     color: AppColors.primaryDark, // Fallback color
                     image: DecorationImage(
                       image: AssetImage(imagePath),
-                      fit: BoxFit.fill,
+                      fit: BoxFit.cover,
                       // Darken the image slightly for better text contrast
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.3), BlendMode.darken),
@@ -185,7 +184,9 @@ class MenuPage extends GetView<CafeMenuController> {
   }
 
   /// Builds the wide container for cafe contact and info.
-  Widget _buildInfoContainer(double height) {
+  Widget _buildInfoContainer(BuildContext context,double height) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return Container(
       width: double.infinity,
       height: height, // Fixed height for the info container
@@ -200,7 +201,7 @@ class MenuPage extends GetView<CafeMenuController> {
           ),
         ],
       ),
-      child: const Column(
+      child:  Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -208,7 +209,7 @@ class MenuPage extends GetView<CafeMenuController> {
             style: TextStyle(
               color: AppColors.highlight,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: screenheight*0.02,
             ),
           ),
           SizedBox(height: 4),
@@ -268,19 +269,17 @@ class MenuPage extends GetView<CafeMenuController> {
               ],
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                /// Item Image
-                ClipRRect(borderRadius: BorderRadius.circular(50),
-                  child: Image.asset(
-                    item.imagePath,
-                    fit: BoxFit.cover,
-                    width: 190,
-                    height: 160,
-                  ),
+                // Item Image
+                Image.asset(
+                  item.imagePath,
+                  fit: BoxFit.cover,
+                  width: 90,
+                  height: 60,
                 ),
-
-                /// Item Name
+                const SizedBox(height: 8),
+                // Item Name
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Text(
@@ -296,7 +295,6 @@ class MenuPage extends GetView<CafeMenuController> {
                 ),
                 // Item Details (can be displayed on tap or hover in a real app)
                 // For now, we'll just show a small indicator or part of the details
-                ///Detailes
                 Text(
                   item.details,
                   style: TextStyle(
