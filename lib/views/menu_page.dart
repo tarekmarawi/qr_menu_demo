@@ -54,7 +54,7 @@ class MenuPage extends GetView<CafeMenuController> {
               // The rest of the content is wrapped in Expanded and SingleChildScrollView
               // The category buttons are now outside the SingleChildScrollView to keep them fixed.
               // Category Buttons Row (now a horizontal scrollable, centered Row)
-              _buildCategoryButtons(screenWidth),
+              _buildCategoryButtons(context,screenWidth),
 
               Expanded(
                 child: SingleChildScrollView(
@@ -105,9 +105,11 @@ class MenuPage extends GetView<CafeMenuController> {
 
   /// Builds the row of category buttons, now using a SingleChildScrollView with a Row
   /// to allow for centering when there are few categories, and scrolling when there are many.
-  Widget _buildCategoryButtons(double screenWidth) {
+  Widget _buildCategoryButtons(BuildContext context,double screenWidth) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenheight = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 220, // Fixed height for the category buttons row
+      height: screenheight*0.23, // Fixed height for the category buttons row
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         // Center the content when it doesn't fill the screen width
@@ -133,8 +135,8 @@ class MenuPage extends GetView<CafeMenuController> {
 
                 return Container(
                   margin: margin,
-                  height: 200,
-                  width: 250, // Fixed width for horizontal scrolling buttons
+                  height: screenheight*0.2,
+                  width: screenWidth*0.25, // Fixed width for horizontal scrolling buttons
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     // Highlight the border if the category is expanded
